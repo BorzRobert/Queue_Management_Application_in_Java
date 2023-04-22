@@ -2,6 +2,9 @@ package Model;
 
 import Model.Task;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,9 +19,6 @@ public class Server implements Runnable {
     }
 
     public void addTask(Task newTask) {
-        //TODO
-        //add task to queue
-        //increment waiting period
         tasks.add(newTask);
         waitingPeriod.addAndGet(newTask.getServiceTime());
     }
@@ -28,15 +28,31 @@ public class Server implements Runnable {
         //take next task from queue
         //stop thread for a time equal with the tasks processing time
         //decrement the waiting period
-        while(true){
-            try {
-                Thread.sleep(tasks.take().getServiceTime() * 1000);
-                waitingPeriod.addAndGet(-tasks.take().getServiceTime());
-            }catch (InterruptedException e) {
-                System.out.println("The queue is empty");
+        List<Task> serverTasks = new ArrayList<>();
+        while (true) {
+            while (tasks.isEmpty()) {
+                try {
+                    //System.out.println("inca e goala");
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!tasks.isEmpty()) {
+                waitingPeriod.decrementAndGet();
+                tasks.peek().setServiceTime(tasks.peek().getServiceTime() - 1);
+                if (tasks.peek().getServiceTime() == 0)
+                    tasks.remove(tasks.peek());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         }
     }
+
     public BlockingQueue<Task> getTasks() {
         return tasks;
     }
@@ -52,4 +68,5 @@ public class Server implements Runnable {
     public void setWaitingPeriod(AtomicInteger waitingPeriod) {
         this.waitingPeriod = waitingPeriod;
     }
+
 }

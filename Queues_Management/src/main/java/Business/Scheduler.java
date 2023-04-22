@@ -18,22 +18,12 @@ public class Scheduler {
     public Scheduler(int maxNoServers, int maxTasksPerServer) {
         this.maxNoServers = maxNoServers;
         this.maxTasksPerServer = maxTasksPerServer;
-        strategy=new ConcreteStrategy();
-        servers=new ArrayList<>();
-        //TODO
-        //create server object
-        //create thread with the object
-        for(int i=0; i<maxNoServers; i++){
-            Server aux=new Server(new ArrayBlockingQueue<>(maxTasksPerServer),new AtomicInteger(0));
-            servers.add(i,aux);
-            Thread serverThread=new Thread(aux);
-            serverThread.start();
-        }
+        strategy = new ConcreteStrategy(0);
+        servers = new ArrayList<>();
     }
+
     public void dispatchTask(Task t) {
-        //TODO
-        //Call the strategy addTask method
-        strategy.addTask(servers,t);
+        strategy.addTask(servers, t);
     }
 
     public int getMaxNoServers() {
@@ -54,5 +44,9 @@ public class Scheduler {
 
     public List<Server> getServers() {
         return servers;
+    }
+
+    public ConcreteStrategy getStrategy() {
+        return strategy;
     }
 }

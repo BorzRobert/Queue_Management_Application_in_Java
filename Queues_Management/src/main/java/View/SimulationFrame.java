@@ -22,8 +22,8 @@ public class SimulationFrame extends JDialog {
         setMinimumSize(new Dimension(500, 400));
         setLocationRelativeTo(parent);
         setVisible(true);
-
     }
+
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
