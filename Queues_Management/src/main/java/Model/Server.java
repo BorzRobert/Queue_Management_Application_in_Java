@@ -12,10 +12,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Server implements Runnable {
     private BlockingQueue<Task> tasks;
     private AtomicInteger waitingPeriod;
+    public boolean ok;
 
     public Server(BlockingQueue<Task> tasks, AtomicInteger waitingPeriod) {
         this.tasks = tasks;
         this.waitingPeriod = waitingPeriod;
+        ok=true;
     }
 
     public void addTask(Task newTask) {
@@ -29,7 +31,7 @@ public class Server implements Runnable {
         //stop thread for a time equal with the tasks processing time
         //decrement the waiting period
         List<Task> serverTasks = new ArrayList<>();
-        while (true) {
+        while (ok) {
             while (tasks.isEmpty()) {
                 try {
                     //System.out.println("inca e goala");

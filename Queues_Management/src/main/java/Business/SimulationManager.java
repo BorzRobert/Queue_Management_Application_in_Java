@@ -206,7 +206,7 @@ public class SimulationManager implements Runnable {
             }
         }
         for(int i=0; i<numberOfServers; i++)
-            serverThread[i].interrupt();
+            scheduler.getServers().get(i).ok=false;
         //Computing averageWaitingTime
         averageWaitingTime = scheduler.getStrategy().waitingTime / numberOfClients;
         //Update log file
