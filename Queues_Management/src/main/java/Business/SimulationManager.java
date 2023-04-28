@@ -195,9 +195,9 @@ public class SimulationManager implements Runnable {
                 }
             }
             //Exit condition(Waiting list empty+queues empty)
-            if (generatedTasks.size() == 0 && emptyQueues)
+            if (generatedTasks.size() == 0 && emptyQueues){
                 break;
-
+            }
             currentTime++;
             try {
                 Thread.sleep(1000);
@@ -205,6 +205,8 @@ public class SimulationManager implements Runnable {
                 e.printStackTrace();
             }
         }
+        for(int i=0; i<numberOfServers; i++)
+            serverThread[i].interrupt();
         //Computing averageWaitingTime
         averageWaitingTime = scheduler.getStrategy().waitingTime / numberOfClients;
         //Update log file
